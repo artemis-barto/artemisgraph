@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Overview</title>
+    <meta charset="utf-8" />
+    <style>
+        /* Basic reset and styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #fff;   /* White background */
+            color: #000;              /* Black text */
+            font-family: Arial, sans-serif;
+        }
+
+        /* Nav bar with a link back to index */
+        .navbar {
+            width: 100%;
+            background: #f1f1f1;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .navbar a {
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 20px;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .navbar button {
+            margin: 0 8px;
+            padding: 8px 16px;
+            border: none;
+            background-color: #ccc;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .navbar button.bold {
+            background-color: #aaa;
+        }
+        .navbar button:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        /* Main content container that centers everything */
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Big number + logo side by side, centered */
+        .big-stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        .big-number {
+            font-size: 4rem;
+            font-weight: 900;
+        }
+        .logo-right {
+            height: 40px;  /* Adjust as needed */
+        }
+
+        /* Sub line under big number/logo */
+        .sub {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        /* Stats container (3 boxes: Past Month, Past Week, Past 24h) */
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .stat-box {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            min-width: 150px;
+        }
+        .stat-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Chain list also centered */
+        .chain-list {
+            margin-top: 40px;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .chain-item {
+            display: flex;
+            justify-content: space-between;
+            background-color: #e9ecef;
+            padding: 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+        }
+        .chain-name {
+            font-weight: 600;
+        }
+        .chain-amount {
+            font-weight: 600;
+        }
+
+        /* Top mint/burn section */
+        .top-mint-burn {
+            margin-top: 50px;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+        .top-mint-burn h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .top-mint-burn table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .top-mint-burn th, .top-mint-burn td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .top-mint-burn th {
+            background-color: #f1f1f1;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        .top-mint-burn td {
+            font-size: 0.9rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="{{ url_for('index') }}" style="text-decoration: none;">
+            <button>Graph</button>
+        </a>
+        <a href="{{ url_for('overview') }}" style="text-decoration: none;">
+            <button class="bold" disabled>Overview</button>
+        </a>
+        <a href="{{ url_for('usage') }}" style="text-decoration: none;">
+            <button>Usage</button>
+        </a>
+        <a href="{{ url_for('overlap') }}" style="text-decoration: none;">
+            <button>Overlap</button>
+        </a>
+    </div>
+
+    <div class="content">
+
+        <!-- Example "Headline" / "Big Stats" section -->
+        <div class="big-stats">
+            <div class="big-number">
+                {{ headline['issued'] if headline['issued'] else "N/A" }}
+            </div>
+            <img src="https://cryptologos.cc/logos/first-digital-usd-fdusd-logo.png?v=040"
+                 alt="fdusd logo"
+                 class="logo-right" />
+        </div>
+
+        <div class="sub">
+            Issued as of {{ headline['date'] if headline['date'] else "Unknown Date" }}
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-title">Past Month</div>
+                <div class="stat-value">
+                    {{ headline['past_month_amount'] if headline['past_month_amount'] else "N/A" }}
+                </div>
+                <div class="sub">
+                    Change: {{ headline['past_month_change'] if headline['past_month_change'] else "0%" }}
+                </div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Past Week</div>
+                <div class="stat-value">
+                    {{ headline['past_week_amount'] if headline['past_week_amount'] else "N/A" }}
+                </div>
+                <div class="sub">
+                    Change: {{ headline['past_week_change'] if headline['past_week_change'] else "0%" }}
+                </div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Past 24h</div>
+                <div class="stat-value">
+                    {{ headline['past_24h_amount'] if headline['past_24h_amount'] else "N/A" }}
+                </div>
+                <div class="sub">
+                    Change: {{ headline['past_24h_change'] if headline['past_24h_change'] else "0%" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Chain amounts display -->
+        <div class="chain-list">
+            {% for chain in chains %}
+            <div class="chain-item">
+                <div class="chain-name">{{ chain.chain if chain.chain else "Unknown" }}</div>
+                <div class="chain-amount">{{ chain.amount if chain.amount else 0 }}</div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+</body>
+</html>

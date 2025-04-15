@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Overlap</title>
+    <meta charset="utf-8">
+
+    <style>
+    /* Basic styling */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #fff;
+        color: #000;
+    }
+    .navbar {
+        background: #f1f1f1;
+        padding: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .navbar button {
+        margin: 0 8px;
+        padding: 8px 16px;
+        border: none;
+        background-color: #ccc;
+        cursor: pointer;
+        font-weight: 600;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+    .navbar button.bold {
+        background-color: #aaa;
+    }
+    .navbar button:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
+    h1 {
+        margin-bottom: 10px;
+    }
+    select {
+        padding: 6px;
+        margin-left: 6px;
+        font-size: 1rem;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        vertical-align: top;
+    }
+    th {
+        background-color: #f1f1f1;
+        text-align: left;
+    }
+    /* Let large text in path columns wrap nicely */
+    td {
+        white-space: pre-wrap;      /* Wrap text (including newlines) */
+        word-wrap: break-word;      /* Break long words if needed */
+    }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="{{ url_for('index') }}" style="text-decoration: none;">
+            <button>Graph</button>
+        </a>
+        <a href="{{ url_for('overview') }}" style="text-decoration: none;">
+            <button>Overview</button>
+        </a>
+        <a href="{{ url_for('usage') }}" style="text-decoration: none;">
+            <button>Usage</button>
+        </a>
+        <a href="{{ url_for('overlap') }}" style="text-decoration: none;">
+            <button class="bold" disabled>Overlap</button>
+        </a>
+    </div>
+
+    <h1>Overlap Table (Timeframe: {{ timeframe }})</h1>
+
+    <!-- Timeframe dropdown to switch 1d,7d,30d,90d -->
+    <div style="text-align:center;">
+        <label for="timeframeSelect"><strong>Select Timeframe:</strong></label>
+        <select id="timeframeSelect" onchange="updateTimeframe()">
+            <!-- Mark the current timeframe if it matches -->
+            <option value="1d"  {% if timeframe == '1d'  %}selected{% endif %}>Last 1 Day</option>
+            <option value="7d"  {% if timeframe == '7d'  %}selected{% endif %}>Last 7 Days</option>
+            <option value="30d" {% if timeframe == '30d' %}selected{% endif %}>Last 30 Days</option>
+            <option value="90d" {% if timeframe == '90d' %}selected{% endif %}>Last 90 Days</option>
+        </select>
+    </div>
+
+    <!-- Table of addresses -->
+    <table>
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>Net Amount</th>
+                <th>Direct Paths (No Binance/FDUSD Treasury)</th>
+                <th>Paths With Binance</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in data %}
+            <tr>
+                <td>{{ row.address }}</td>
+                <td>{{ row.net_amount }}</td>
+                <td>{{ row.direct_paths_no_binance }}</td>
+                <td>{{ row.paths_with_binance }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+    function updateTimeframe() {
+        const selected = document.getElementById("timeframeSelect").value;
+        window.location.href = "/overlap?timeframe=" + selected;
+    }
+    </script>
+
+</body>
+</html>
